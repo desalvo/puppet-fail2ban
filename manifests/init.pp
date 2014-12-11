@@ -43,7 +43,7 @@ class fail2ban (
 ) inherits params {
     if ($bantime) { $ban_time = $bantime } else { $ban_time = $fail2ban::params::bantime }
     if ($findtime) { $find_time = $findtime } else { $find_time = $fail2ban::params::findtime }
-    if ($maxretry) { $max_retry = $maxretry } else { $max_retries = $fail2ban::params::maxretry }
+    if ($maxretry) { $max_retry = $maxretry } else { $max_retry = $fail2ban::params::maxretry }
 
     file { $fail2ban::params::config_file:
         owner   => root,
