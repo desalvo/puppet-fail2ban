@@ -21,7 +21,7 @@ class { fail2ban: }
 
 * **bantime**: banning time, in seconds
 * **findtime**: the counter is set to zero if no match is found within "findtime" seconds
-* **maxretries**: number of matches (i.e. value of the counter) which triggers ban action on the IP
+* **maxretry**: number of matches (i.e. value of the counter) which triggers ban action on the IP
 * **jails**: list of jails to configure, currently supported jails are imap, pop3, ssh, vsftpd
 * **mailto**: mail address to send notifications
 
@@ -49,9 +49,9 @@ Contributors
 Release Notes
 -------------
 
-**0.1.1**
+**0.1.2**
 
-* Add bantime, findtime and maxretries parameters
+* Add bantime, findtime and maxretry parameters
 
 **0.1.0**
 

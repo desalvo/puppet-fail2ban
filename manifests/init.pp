@@ -10,7 +10,7 @@
 # [*findtime*]
 #   The counter is set to zero if no match is found within "findtime" seconds 
 #
-# [*maxretries*]
+# [*maxretry*]
 #   Number of matches (i.e. value of the counter) which triggers ban action on the IP
 #
 # [*jails*]
@@ -39,11 +39,11 @@ class fail2ban (
   $bantime = undef,
   $findtime = undef,
   $mailto = undef,
-  $maxretries = undef
+  $maxretry = undef
 ) inherits params {
     if ($bantime) { $ban_time = $bantime } else { $ban_time = $fail2ban::params::bantime }
     if ($findtime) { $find_time = $findtime } else { $find_time = $fail2ban::params::findtime }
-    if ($maxretries) { $max_retries = $maxretries } else { $max_retries = $fail2ban::params::maxretries }
+    if ($maxretry) { $max_retry = $maxretry } else { $max_retries = $fail2ban::params::maxretry }
 
     file { $fail2ban::params::config_file:
         owner   => root,
