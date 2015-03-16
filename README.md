@@ -49,6 +49,10 @@ Contributors
 Release Notes
 -------------
 
+**0.1.3**
+
+* Add whois in case of ssh jails defined
+
 **0.1.2**
 
 * Add bantime, findtime and maxretry parameters

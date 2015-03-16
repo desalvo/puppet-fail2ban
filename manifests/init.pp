@@ -4,15 +4,6 @@
 #
 # === Parameters
 #
-# [*bantime*]
-#   Banning time
-#
-# [*findtime*]
-#   The counter is set to zero if no match is found within "findtime" seconds 
-#
-# [*maxretry*]
-#   Number of matches (i.e. value of the counter) which triggers ban action on the IP
-#
 # [*jails*]
 #   List of jails to activate. Currently supported options are imap, pop3, ssh, vsftpd
 #
@@ -36,15 +27,8 @@
 #
 class fail2ban (
   $jails = [],
-  $bantime = undef,
-  $findtime = undef,
-  $mailto = undef,
-  $maxretry = undef
+  $mailto = undef
 ) inherits params {
-    if ($bantime) { $ban_time = $bantime } else { $ban_time = $fail2ban::params::bantime }
-    if ($findtime) { $find_time = $findtime } else { $find_time = $fail2ban::params::findtime }
-    if ($maxretry) { $max_retry = $maxretry } else { $max_retry = $fail2ban::params::maxretry }
-
     file { $fail2ban::params::config_file:
         owner   => root,
         group   => root,
@@ -67,5 +51,8 @@ class fail2ban (
         enable => true,
         hasrestart => true,
         require => Package[$fail2ban::params::package]
+    }
+    if ('ssh' in $jails) {
+        package { $fail2ban::params::whois: ensure => latest }
     }
 }
