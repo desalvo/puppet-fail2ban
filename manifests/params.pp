@@ -48,5 +48,16 @@ class fail2ban::params {
   $mta = 'sendmail'
   $jails_protocol = 'tcp'
   $jails_chain = 'INPUT'
-  $whois = 'whois'
+  case $operatingsystem {
+    RedHat,Scientific,CentOS: {
+      if ($operatingsystemmajrelease < 7) {
+        $whois = 'jwhois'
+      } else {
+        $whois = 'whois'
+      }
+    }
+    default: {
+      $whois = 'whois'
+    }
+  }
 }

@@ -49,6 +49,10 @@ Contributors
 Release Notes
 -------------
 
+**0.1.4**
+
+* Fix whois package name for RHEL  < 7
+
 **0.1.3**
 
 * Add whois in case of ssh jails defined
