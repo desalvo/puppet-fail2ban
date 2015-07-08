@@ -24,6 +24,7 @@ class { fail2ban: }
 * **maxretry**: number of matches (i.e. value of the counter) which triggers ban action on the IP
 * **jails**: list of jails to configure, currently supported jails are imap, pop3, ssh, vsftpd
 * **mailto**: mail address to send notifications
+* **log_file**: the log file path or SYSLOG (default), STDOUT, STDERR
 
 Usage
 -----
@@ -48,6 +49,10 @@ Contributors
 
 Release Notes
 -------------
+
+**0.1.5**
+
+* Add log_file option
 
 **0.1.4**
 
