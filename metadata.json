@@ -1,0 +1,14 @@
+{
+  "name": "desalvo-fail2ban",
+  "version": "0.1.5",
+  "author": "desalvo",
+  "summary": "Puppet module for fail2ban",
+  "license": "Apache License, Version 2.0",
+  "source": "https://github.com/desalvo/puppet-fail2ban",
+  "issues_url": "https://github.com/desalvo/puppet-fail2ban/issues",
+  "description": "Puppet module for fail2ban configuration",
+  "project_page": "https://github.com/desalvo/puppet-fail2ban",
+  "dependencies": [
+  
+  ]
+}
