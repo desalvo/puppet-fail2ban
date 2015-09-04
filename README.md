@@ -50,6 +50,10 @@ Contributors
 Release Notes
 -------------
 
+**0.1.6**
+
+* Puppet 4 compatibility
+
 **0.1.5**
 
 * Add log_file option

@@ -50,17 +50,17 @@ class fail2ban (
     if ($maxretry) { $max_retry = $maxretry } else { $max_retry = $fail2ban::params::maxretry }
 
     file { $fail2ban::params::config_file:
-        owner   => root,
-        group   => root,
-        mode    => 644,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
         content => template('fail2ban/fail2ban.local.erb'),
         require => Package[$fail2ban::params::package],
         notify  => Service[$fail2ban::params::service]
     }
     file { $fail2ban::params::jail_file:
-        owner   => root,
-        group   => root,
-        mode    => 644,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
         content => template('fail2ban/jail.local.erb'),
         require => Package[$fail2ban::params::package],
         notify  => Service[$fail2ban::params::service]
