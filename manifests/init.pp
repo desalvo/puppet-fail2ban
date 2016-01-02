@@ -16,6 +16,9 @@
 # [*jails*]
 #   List of jails to activate. Currently supported options are imap, pop3, ssh, vsftpd
 #
+# [*backend*]
+#   Backend to use, defaults to 'auto'
+#
 # [*mailto*]
 #   The mail address where to send notifications
 #
@@ -40,14 +43,16 @@
 class fail2ban (
   $jails    = [],
   $bantime  = undef,
+  $backend  = undef,
   $findtime = undef,
   $mailto   = undef,
   $maxretry = undef,
   $log_file = $::fail2ban::params::log_file,
 ) inherits params {
-    if ($bantime)  { $ban_time = $bantime }   else { $ban_time = $fail2ban::params::bantime }
-    if ($findtime) { $find_time = $findtime } else { $find_time = $fail2ban::params::findtime }
-    if ($maxretry) { $max_retry = $maxretry } else { $max_retry = $fail2ban::params::maxretry }
+    if ($bantime)  { $ban_time = $bantime }     else { $ban_time = $fail2ban::params::bantime }
+    if ($backend)  { $backend_name = $backend } else { $backend_name = $fail2ban::params::backend }
+    if ($findtime) { $find_time = $findtime }   else { $find_time = $fail2ban::params::findtime }
+    if ($maxretry) { $max_retry = $maxretry }   else { $max_retry = $fail2ban::params::maxretry }
 
     file { $fail2ban::params::config_file:
         owner   => 'root',
@@ -66,11 +71,21 @@ class fail2ban (
         notify  => Service[$fail2ban::params::service]
     }
     package { $fail2ban::params::package: ensure => latest }
-    service { $fail2ban::params::service:
-        ensure => running,
-        enable => true,
-        hasrestart => true,
-        require => Package[$fail2ban::params::package]
+    if ($backend == 'systemd') {
+        service { $fail2ban::params::service:
+            ensure => running,
+            enable => true,
+            hasrestart => true,
+            provider => systemd,
+            require => Package[$fail2ban::params::package]
+        }
+    } else {
+        service { $fail2ban::params::service:
+            ensure => running,
+            enable => true,
+            hasrestart => true,
+            require => Package[$fail2ban::params::package]
+        }
     }
     if ('ssh' in $jails) {
         package { $fail2ban::params::whois: ensure => latest }

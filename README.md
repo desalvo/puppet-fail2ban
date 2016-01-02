@@ -20,6 +20,7 @@ class { fail2ban: }
 ```
 
 * **bantime**: banning time, in seconds
+* **backend**: backend to be used, defaults to 'auto'. Use 'systemd' to force using systemd.
 * **findtime**: the counter is set to zero if no match is found within "findtime" seconds
 * **maxretry**: number of matches (i.e. value of the counter) which triggers ban action on the IP
 * **jails**: list of jails to configure, currently supported jails are imap, pop3, ssh, vsftpd
@@ -49,6 +50,10 @@ Contributors
 
 Release Notes
 -------------
+
+**0.1.7**
+
+* Add backend parameter to force systemd
 
 **0.1.6**
 

@@ -3,7 +3,7 @@ ignoreip = <%= scope.lookupvar('fail2ban::ignoreip') %>
 bantime = <%= scope.lookupvar('fail2ban::ban_time') %>
 findtime = <%= scope.lookupvar('fail2ban::find_time') %>
 maxretry = <%= scope.lookupvar('fail2ban::max_retry') %>
-backend = <%= scope.lookupvar('fail2ban::backend') %>
+backend = <%= scope.lookupvar('fail2ban::backend_name') %>
 
 [imap-iptables]
 enabled = <%= scope.lookupvar('fail2ban::jails').include? "imap" %>

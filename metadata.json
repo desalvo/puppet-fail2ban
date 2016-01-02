@@ -1,6 +1,6 @@
 {
   "name": "desalvo-fail2ban",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "desalvo",
   "summary": "Puppet module for fail2ban",
   "license": "Apache License, Version 2.0",
