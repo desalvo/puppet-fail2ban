@@ -35,7 +35,7 @@ class fail2ban::params {
     default => '/var/run/fail2ban/fail2ban.pid',
   }
 
-  $log_level = '3'
+  $log_level = 'WARNING'
   $socket = '/var/run/fail2ban/fail2ban.sock'
 
   $ignoreip = ['127.0.0.1/8']

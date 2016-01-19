@@ -26,6 +26,8 @@ class { fail2ban: }
 * **jails**: list of jails to configure, currently supported jails are imap, pop3, ssh, vsftpd
 * **mailto**: mail address to send notifications
 * **log_file**: the log file path or SYSLOG (default), STDOUT, STDERR
+* **log_level**: the log level, level can be one of CRITICAL, ERROR, WARNING, NOTICE, INFO, DEBUG
+
 
 Usage
 -----
@@ -50,6 +52,11 @@ Contributors
 
 Release Notes
 -------------
+
+**0.1.8**
+
+* Fix params inheritance namespace
+* New log_level parameter
 
 **0.1.7**
 

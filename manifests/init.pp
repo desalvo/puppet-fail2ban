@@ -25,6 +25,9 @@
 # [*log_file*]
 #   The log file path or SYSLOG (default), STDOUT, STDERR
 #
+# [*log_level*]
+#   The log level. Levels: CRITICAL, ERROR, WARNING, NOTICE, INFO, DEBUG
+#
 # === Examples
 #
 #  class { fail2ban:
@@ -41,14 +44,15 @@
 # Copyright 2014 Alessandro De Salvo
 #
 class fail2ban (
-  $jails    = [],
-  $bantime  = undef,
-  $backend  = undef,
-  $findtime = undef,
-  $mailto   = undef,
-  $maxretry = undef,
-  $log_file = $::fail2ban::params::log_file,
-) inherits params {
+  $jails     = [],
+  $bantime   = undef,
+  $backend   = undef,
+  $findtime  = undef,
+  $mailto    = undef,
+  $maxretry  = undef,
+  $log_file  = $::fail2ban::params::log_file,
+  $log_level = $::fail2ban::params::log_level,
+) inherits fail2ban::params {
     if ($bantime)  { $ban_time = $bantime }     else { $ban_time = $fail2ban::params::bantime }
     if ($backend)  { $backend_name = $backend } else { $backend_name = $fail2ban::params::backend }
     if ($findtime) { $find_time = $findtime }   else { $find_time = $fail2ban::params::findtime }
