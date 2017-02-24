@@ -1,51 +1,31 @@
 [DEFAULT]
-ignoreip = <%= scope.lookupvar('fail2ban::ignoreip') %>
-bantime = <%= scope.lookupvar('fail2ban::ban_time') %>
-findtime = <%= scope.lookupvar('fail2ban::find_time') %>
-maxretry = <%= scope.lookupvar('fail2ban::max_retry') %>
-backend = <%= scope.lookupvar('fail2ban::backend_name') %>
+ignoreip = <%= scope.lookupvar('fail2ban::ignoreip').join(' ') %>
+bantime = <%= scope.lookupvar('fail2ban::bantime') %>
+findtime = <%= scope.lookupvar('fail2ban::findtime') %>
+maxretry = <%= scope.lookupvar('fail2ban::maxretry') %>
+backend = <%= scope.lookupvar('fail2ban::backend') %>
+<% scope.lookupvar('fail2ban::jails').keys.sort.each do |jail| -%>
+<% if scope.lookupvar('fail2ban::params::jail_defaults').keys.include? jail -%>
 
-[imap-iptables]
-enabled = <%= scope.lookupvar('fail2ban::jails').include? "imap" %>
-filter = dovecot
-action = iptables[name=IMAP, port=imap, protocol=tcp]
+[<%= jail %>]
+enabled = <%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "enable" %><%= scope.lookupvar('fail2ban::jails')[jail]['enable'] %><% else %>true<% end %>
+filter = <%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "filter" %><%= scope.lookupvar('fail2ban::jails')[jail]['filter'] %><% else %><%= scope.lookupvar('fail2ban::params::jail_defaults')[jail]['filter'] %><% end %>
+action = <%= scope.lookupvar('fail2ban::action') %>[name=<%= jail.upcase %>, port=<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "port" %><%= scope.lookupvar('fail2ban::jails')[jail]['port'] %><% else %><%= scope.lookupvar('fail2ban::params::jail_defaults')[jail]['port'] %><% end %>, <%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "protocol" %><%= scope.lookupvar('fail2ban::jails')[jail]['protocol'] %><% else %>protocol=<%= scope.lookupvar('fail2ban::params::jails_protocol') %><% end %>]
 <% unless scope.lookupvar('fail2ban::mailto').empty? -%>
-           sendmail-whois[name=POP3, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
+           sendmail-whois[name=<%= jail.upcase %>, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
 <% end -%>
-logpath = /var/log/maillog
-maxretry = 5
-
-[pop3-iptables]
-enabled = <%= scope.lookupvar('fail2ban::jails').include? "pop3" %>
-filter = mail
-action = iptables[name=POP3, port=pop3, protocol=tcp]
-<% unless scope.lookupvar('fail2ban::mailto').empty? -%>
-           sendmail-whois[name=POP3, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
+logpath = <%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "logpath" %><%= scope.lookupvar('fail2ban::jails')[jail]['logpath'] %><% else %><%= scope.lookupvar('fail2ban::params::jail_defaults')[jail]['logpath'] %><% end %>
+<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "ignoreip" -%>
+ignoreip = <%= scope.lookupvar('fail2ban::jails')[jail]['ignoreip'].join(' ') %>
 <% end -%>
-logpath = /var/log/maillog
-maxretry = 5
-
-[ssh-iptables]
-enabled = <%= scope.lookupvar('fail2ban::jails').include? "ssh" %>
-filter = sshd
-action = iptables[name=SSH, port=ssh, protocol=tcp]
-<% unless scope.lookupvar('fail2ban::mailto').empty? -%>
-           sendmail-whois[name=SSH, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
+<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "bantime" -%>
+bantime = <%= scope.lookupvar('fail2ban::jails')[jail]['bantime'] %>
+<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "findtime" -%>
+findtime = <%= scope.lookupvar('fail2ban::jails')[jail]['findtime'] %>
 <% end -%>
-<% if @osfamily == "Debian" -%>
-logpath = /var/log/auth.log
-<% else -%>
-logpath = /var/log/secure
+<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "maxretry" -%>
+maxretry = <%= scope.lookupvar('fail2ban::jails')[jail]['maxretry'] %>
 <% end -%>
-maxretry = 5
-
-[vsftpd-iptables]
-enabled = <%= scope.lookupvar('fail2ban::jails').include? "vsftpd" %>
-filter = vsftpd
-action = iptables[name=VSFTPD, port=ftp, protocol=tcp]
-<% unless scope.lookupvar('fail2ban::mailto').empty? -%>
-           sendmail-whois[name=VSFTPD, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
 <% end -%>
-logpath = /var/log/vsftpd.log
-maxretry = 5
-bantime = 1800
+<% end -%>
+<% end -%>

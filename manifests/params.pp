@@ -6,6 +6,14 @@ class fail2ban::params {
     default => 'fail2ban',
   }
 
+  $package_systemd = $::operatingsystem ? {
+    default => 'fail2ban-systemd',
+  }
+
+  $package_firewalld = $::operatingsystem ? {
+    default => 'fail2ban-firewalld',
+  }
+
   $service = $::operatingsystem ? {
     default => 'fail2ban',
   }
@@ -43,6 +51,7 @@ class fail2ban::params {
   $findtime = '600'
   $maxretry = '5'
   $backend = 'auto'
+  $action = 'iptables'
   $mailto = "hostmaster@${::domain}"
   $banaction = 'iptables-multiport'
   $mta = 'sendmail'
@@ -50,7 +59,7 @@ class fail2ban::params {
   $jails_chain = 'INPUT'
   case $operatingsystem {
     RedHat,Scientific,CentOS: {
-      if ($operatingsystemmajrelease < 7) {
+      if ($operatingsystemmajrelease * 1 < 7) {
         $whois = 'jwhois'
       } else {
         $whois = 'whois'
@@ -60,4 +69,10 @@ class fail2ban::params {
       $whois = 'whois'
     }
   }
+  $jail_defaults = {
+                    'imap'   => { 'filter' => 'dovecot', 'port' => 'imap', 'logpath' => '/var/log/maillog' },
+                    'pop3'   => { 'filter' => 'mail', 'port' => 'pop3', 'logpath' => '/var/log/maillog' },
+                    'sshd'   => { 'filter' => 'sshd', 'port' => 'sshd', 'logpath' => $::osfamily ? { /?i:Debian|Ubuntu|Mint)/ => '/var/log/auth.log', default => '/var/log/secure' } },
+                    'vsftpd' => { 'filter' => 'vsftpd', 'port' => 'ftp', 'logpath' => '/var/log/vsftpd.log' },
+                   }
 }

@@ -21,9 +21,10 @@ class { fail2ban: }
 
 * **bantime**: banning time, in seconds
 * **backend**: backend to be used, defaults to 'auto'. Use 'systemd' to force using systemd.
+* **action**: action used to ban, defaults to 'iptables'. Set it to 'firewallcmd-ipset' to use firewalld.
 * **findtime**: the counter is set to zero if no match is found within "findtime" seconds
 * **maxretry**: number of matches (i.e. value of the counter) which triggers ban action on the IP
-* **jails**: list of jails to configure, currently supported jails are imap, pop3, ssh, vsftpd
+* **jails**: hash of jails to activate, currently supported options are imap, pop3, sshd, vsftpd.
 * **mailto**: mail address to send notifications
 * **log_file**: the log file path or SYSLOG (default), STDOUT, STDERR
 * **log_level**: the log level, level can be one of CRITICAL, ERROR, WARNING, NOTICE, INFO, DEBUG
@@ -34,13 +35,14 @@ Usage
 
 ### Examples
 
-This is a simple example to configure fail2ban with an SSH jail.
+This is a simple example to configure fail2ban with an SSH and IMAP jail.
+You can override values for the given jail by specifying the parameters in the jail hash.
 
-**Using the fail2ban ssh jail**
+**Using the fail2ban ssh and imap  jails**
 
 ```fail2ban
 class { 'fail2ban':
-    jails  => ['ssh'],
+    jails  => {'sshd' => { 'maxretry' => 5 }, 'imap' => {}},
     mailto => 'root@example.com',
 }
 ```
@@ -52,6 +54,11 @@ Contributors
 
 Release Notes
 -------------
+
+**1.0.0**
+
+* Firewalld support
+* Jail parameter overrides
 
 **0.1.8**
 

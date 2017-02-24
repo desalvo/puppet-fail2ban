@@ -14,10 +14,16 @@
 #   Number of matches (i.e. value of the counter) which triggers ban action on the IP
 #
 # [*jails*]
-#   List of jails to activate. Currently supported options are imap, pop3, ssh, vsftpd
+#   Hash of jails to activate. Currently supported options are imap, pop3, sshd, vsftpd.
+#   The list is an hash of jails. You can also specify different parameters for each jail.
+#   Example:
+#   { 'sshd' => { 'maxretry' => 5 }, 'imap' => {} }
 #
 # [*backend*]
 #   Backend to use, defaults to 'auto'
+#
+# [*action*]
+#   Ban action to be used, deafults to iptables
 #
 # [*mailto*]
 #   The mail address where to send notifications
@@ -44,20 +50,17 @@
 # Copyright 2014 Alessandro De Salvo
 #
 class fail2ban (
-  $jails     = [],
-  $bantime   = undef,
-  $backend   = undef,
-  $findtime  = undef,
+  $jails     = {},
+  $bantime   = $::fail2ban::params::bantime,
+  $backend   = $::fail2ban::params::backend,
+  $action    = $::fail2ban::params::action,
+  $findtime  = $::fail2ban::params::findtime,
   $mailto    = undef,
-  $maxretry  = undef,
+  $maxretry  = $::fail2ban::params::maxretry,
+  $ignoreip  = $::fail2ban::params::ignoreip,
   $log_file  = $::fail2ban::params::log_file,
   $log_level = $::fail2ban::params::log_level,
 ) inherits fail2ban::params {
-    if ($bantime)  { $ban_time = $bantime }     else { $ban_time = $fail2ban::params::bantime }
-    if ($backend)  { $backend_name = $backend } else { $backend_name = $fail2ban::params::backend }
-    if ($findtime) { $find_time = $findtime }   else { $find_time = $fail2ban::params::findtime }
-    if ($maxretry) { $max_retry = $maxretry }   else { $max_retry = $fail2ban::params::maxretry }
-
     file { $fail2ban::params::config_file:
         owner   => 'root',
         group   => 'root',
@@ -76,12 +79,13 @@ class fail2ban (
     }
     package { $fail2ban::params::package: ensure => latest }
     if ($backend == 'systemd') {
+        package { $fail2ban::params::package_systemd: ensure => latest }
         service { $fail2ban::params::service:
             ensure => running,
             enable => true,
             hasrestart => true,
             provider => systemd,
-            require => Package[$fail2ban::params::package]
+            require => [Package[$fail2ban::params::package],Package[$fail2ban::params::package_systemd]]
         }
     } else {
         service { $fail2ban::params::service:
@@ -91,7 +95,7 @@ class fail2ban (
             require => Package[$fail2ban::params::package]
         }
     }
-    if ('ssh' in $jails) {
+    if (has_key($jails,'sshd') {
         package { $fail2ban::params::whois: ensure => latest }
     }
 }
