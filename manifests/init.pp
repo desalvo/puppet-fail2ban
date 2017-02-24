@@ -95,7 +95,7 @@ class fail2ban (
             require => Package[$fail2ban::params::package]
         }
     }
-    if (has_key($jails,'sshd') {
+    if (has_key($jails,'sshd')) {
         package { $fail2ban::params::whois: ensure => latest }
     }
 }

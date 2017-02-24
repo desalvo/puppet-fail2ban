@@ -58,7 +58,7 @@ class fail2ban::params {
   $jails_protocol = 'tcp'
   $jails_chain = 'INPUT'
   case $operatingsystem {
-    RedHat,Scientific,CentOS: {
+    'RedHat','Scientific','CentOS': {
       if ($operatingsystemmajrelease * 1 < 7) {
         $whois = 'jwhois'
       } else {
@@ -72,7 +72,7 @@ class fail2ban::params {
   $jail_defaults = {
                     'imap'   => { 'filter' => 'dovecot', 'port' => 'imap', 'logpath' => '/var/log/maillog' },
                     'pop3'   => { 'filter' => 'mail', 'port' => 'pop3', 'logpath' => '/var/log/maillog' },
-                    'sshd'   => { 'filter' => 'sshd', 'port' => 'sshd', 'logpath' => $::osfamily ? { /?i:Debian|Ubuntu|Mint)/ => '/var/log/auth.log', default => '/var/log/secure' } },
+                    'sshd'   => { 'filter' => 'sshd', 'port' => 'ssh', 'logpath' => $::osfamily ? { 'Debian' => '/var/log/auth.log', default => '/var/log/secure' } },
                     'vsftpd' => { 'filter' => 'vsftpd', 'port' => 'ftp', 'logpath' => '/var/log/vsftpd.log' },
                    }
 }

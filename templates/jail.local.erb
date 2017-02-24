@@ -4,27 +4,29 @@ bantime = <%= scope.lookupvar('fail2ban::bantime') %>
 findtime = <%= scope.lookupvar('fail2ban::findtime') %>
 maxretry = <%= scope.lookupvar('fail2ban::maxretry') %>
 backend = <%= scope.lookupvar('fail2ban::backend') %>
+<% jails = scope.lookupvar('fail2ban::jails') -%>
+<% jail_defaults = scope.lookupvar('fail2ban::params::jail_defaults') -%>
 <% scope.lookupvar('fail2ban::jails').keys.sort.each do |jail| -%>
-<% if scope.lookupvar('fail2ban::params::jail_defaults').keys.include? jail -%>
+<% if scope.lookupvar('fail2ban::params::jail_defaults').has_key? jail -%>
 
 [<%= jail %>]
-enabled = <%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "enable" %><%= scope.lookupvar('fail2ban::jails')[jail]['enable'] %><% else %>true<% end %>
-filter = <%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "filter" %><%= scope.lookupvar('fail2ban::jails')[jail]['filter'] %><% else %><%= scope.lookupvar('fail2ban::params::jail_defaults')[jail]['filter'] %><% end %>
-action = <%= scope.lookupvar('fail2ban::action') %>[name=<%= jail.upcase %>, port=<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "port" %><%= scope.lookupvar('fail2ban::jails')[jail]['port'] %><% else %><%= scope.lookupvar('fail2ban::params::jail_defaults')[jail]['port'] %><% end %>, <%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "protocol" %><%= scope.lookupvar('fail2ban::jails')[jail]['protocol'] %><% else %>protocol=<%= scope.lookupvar('fail2ban::params::jails_protocol') %><% end %>]
-<% unless scope.lookupvar('fail2ban::mailto').empty? -%>
+enabled = <% if jails[jail].has_key? "enable" %><%= jails[jail]['enable'] %><% else %>true<% end %>
+filter = <% if jails[jail].has_key? "filter" %><%= jails[jail]['filter'] %><% else %><%= jail_defaults[jail]['filter'] %><% end %>
+action = <%= scope.lookupvar('fail2ban::action') %>[name=<%= jail.upcase %>, port=<% if jails[jail].has_key? "port" %><%= jails[jail]['port'] %><% else %><%= jail_defaults[jail]['port'] %><% end %>, <% if jails[jail].has_key? "protocol" %><%= jails[jail]['protocol'] %><% else %>protocol=<%= scope.lookupvar('fail2ban::params::jails_protocol') %><% end %>]
+<% if scope.lookupvar('fail2ban::mailto') -%>
            sendmail-whois[name=<%= jail.upcase %>, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
 <% end -%>
-logpath = <%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "logpath" %><%= scope.lookupvar('fail2ban::jails')[jail]['logpath'] %><% else %><%= scope.lookupvar('fail2ban::params::jail_defaults')[jail]['logpath'] %><% end %>
-<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "ignoreip" -%>
-ignoreip = <%= scope.lookupvar('fail2ban::jails')[jail]['ignoreip'].join(' ') %>
+logpath = <% if jails[jail].has_key? "logpath" %><%= jails[jail]['logpath'] %><% else %><%= jail_defaults[jail]['logpath'] %><% end %>
+<% if jails[jail].has_key? "ignoreip" -%>
+ignoreip = <%= jails[jail]['ignoreip'].join(' ') %>
 <% end -%>
-<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "bantime" -%>
-bantime = <%= scope.lookupvar('fail2ban::jails')[jail]['bantime'] %>
-<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "findtime" -%>
-findtime = <%= scope.lookupvar('fail2ban::jails')[jail]['findtime'] %>
+<% if jails[jail].has_key? "bantime" -%>
+bantime = <%= jails[jail]['bantime'] %>
+<% if jails[jail].has_key? "findtime" -%>
+findtime = <%= jails[jail]['findtime'] %>
 <% end -%>
-<%= if scope.lookupvar('fail2ban::jails')[jail].keys.include? "maxretry" -%>
-maxretry = <%= scope.lookupvar('fail2ban::jails')[jail]['maxretry'] %>
+<% if jails[jail].has_key? "maxretry" -%>
+maxretry = <%= jails[jail]['maxretry'] %>
 <% end -%>
 <% end -%>
 <% end -%>
