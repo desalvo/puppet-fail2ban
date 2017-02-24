@@ -23,7 +23,7 @@
 #   Backend to use, defaults to 'auto'
 #
 # [*action*]
-#   Ban action to be used, deafults to iptables
+#   Ban action to be used, deafults to iptables unless you are running on RHEL >= 7
 #
 # [*mailto*]
 #   The mail address where to send notifications

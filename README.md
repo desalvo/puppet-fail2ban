@@ -21,7 +21,7 @@ class { fail2ban: }
 
 * **bantime**: banning time, in seconds
 * **backend**: backend to be used, defaults to 'auto'. Use 'systemd' to force using systemd.
-* **action**: action used to ban, defaults to 'iptables'. Set it to 'firewallcmd-ipset' to use firewalld.
+* **action**: action used to ban, defaults to 'iptables' unless you run on RHEL >= 7. Set it to 'firewallcmd-ipset' to use firewalld.
 * **findtime**: the counter is set to zero if no match is found within "findtime" seconds
 * **maxretry**: number of matches (i.e. value of the counter) which triggers ban action on the IP
 * **jails**: hash of jails to activate, currently supported options are imap, pop3, sshd, vsftpd.
