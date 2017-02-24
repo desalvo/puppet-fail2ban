@@ -63,7 +63,7 @@ class fail2ban::params {
         $action = 'iptables'
       } else {
         $whois = 'whois'
-        $action = 'firewalld-ipset'
+        $action = 'firewallcmd-ipset'
       }
     }
     default: {
