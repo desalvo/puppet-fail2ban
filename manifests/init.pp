@@ -14,10 +14,10 @@
 #   Number of matches (i.e. value of the counter) which triggers ban action on the IP
 #
 # [*jails*]
-#   Hash of jails to activate. Currently supported options are imap, pop3, sshd, vsftpd.
+#   Hash of jails to activate. Currently supported options are imap, pop3, ssh, vsftpd.
 #   The list is an hash of jails. You can also specify different parameters for each jail.
 #   Example:
-#   { 'sshd' => { 'maxretry' => 5 }, 'imap' => {} }
+#   { 'ssh' => { 'maxretry' => 5 }, 'imap' => {} }
 #
 # [*backend*]
 #   Backend to use, defaults to 'auto'
@@ -95,7 +95,7 @@ class fail2ban (
             require => Package[$fail2ban::params::package]
         }
     }
-    if (has_key($jails,'sshd')) {
+    if (has_key($jails,'ssh')) {
         package { $fail2ban::params::whois: ensure => latest }
     }
 }

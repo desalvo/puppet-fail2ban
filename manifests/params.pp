@@ -74,7 +74,7 @@ class fail2ban::params {
   $jail_defaults = {
                     'imap'   => { 'filter' => 'dovecot', 'port' => 'imap', 'logpath' => '/var/log/maillog' },
                     'pop3'   => { 'filter' => 'mail', 'port' => 'pop3', 'logpath' => '/var/log/maillog' },
-                    'sshd'   => { 'filter' => 'sshd', 'port' => 'ssh', 'logpath' => $::osfamily ? { 'Debian' => '/var/log/auth.log', default => '/var/log/secure' } },
+                    'ssh'    => { 'filter' => 'sshd', 'port' => 'ssh', 'logpath' => $::osfamily ? { 'Debian' => '/var/log/auth.log', default => '/var/log/secure' } },
                     'vsftpd' => { 'filter' => 'vsftpd', 'port' => 'ftp', 'logpath' => '/var/log/vsftpd.log' },
                    }
 }
