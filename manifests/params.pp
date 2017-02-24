@@ -50,7 +50,6 @@ class fail2ban::params {
   $bantime = '600'
   $findtime = '600'
   $maxretry = '5'
-  $backend = 'auto'
   $mailto = "hostmaster@${::domain}"
   $banaction = 'iptables-multiport'
   $mta = 'sendmail'
@@ -61,14 +60,17 @@ class fail2ban::params {
       if ($operatingsystemmajrelease * 1 < 7) {
         $whois = 'jwhois'
         $action = 'iptables'
+        $backend = 'auto'
       } else {
         $whois = 'whois'
         $action = 'firewallcmd-ipset'
+        $backend = 'systemd'
       }
     }
     default: {
       $whois = 'whois'
       $action = 'iptables'
+      $backend = 'auto'
     }
   }
   $jail_defaults = {
